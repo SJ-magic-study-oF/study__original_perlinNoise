@@ -1,0 +1,131 @@
+//button.btn {
+//    font-size: 19px;
+//}
+
+div#kensaku {
+    margin: 0 0 10px;
+}
+
+div.pcad {
+    margin-bottom: 40px;
+}
+
+body {
+    font-size: 16px;
+}
+
+div.clear {
+    clear: both;
+}
+
+h1.pagetitle{
+    font-size: 22px;
+    color: #000;
+    font-weight: bold;
+    line-height: 1;
+    margin: 10px;
+}
+
+img.zu {
+    align:center;
+    clear: both;
+}
+
+hr {
+    margin: 0 20px 0px;
+}
+
+.big {
+    float: right;
+}
+
+.medium {
+    float: right;
+}
+
+.mini {
+    float: right;
+}
+
+.entry-header .entry-title {
+    font-size: 20px;
+}
+
+h3 {
+    font-size: 17px;
+}
+
+div.adpcshita {
+    text-align:center;
+    margin-bottom: 30px;
+}
+
+div.bookpr {
+    margin-top: 40px;
+}
+
+div#page img {
+    margin: 5px 2px 5px 18px;
+}
+
+div.twitter {
+    margin-top:40px;
+}
+
+div.new_more {
+    margin: -10px 0px 5px;
+}
+
+div.kiji_head {
+    border-radius: 5px;
+    background: -moz-linear-gradient(top, #f3f3f3 0%, #f3f3f3 33%, #fcfcfc 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3f3f3), color-stop(33%,#f3f3f3), color-stop(100%,#fcfcfc));
+    background: -webkit-linear-gradient(top, #f3f3f3 0%,#f3f3f3 33%,#fcfcfc 100%);
+    background: -o-linear-gradient(top, #f3f3f3 0%,#f3f3f3 33%,#fcfcfc 100%);
+    background: -ms-linear-gradient(top, #f3f3f3 0%,#f3f3f3 33%,#fcfcfc 100%);
+    background: linear-gradient(to bottom, #f3f3f3 0%,#f3f3f3 33%,#fcfcfc 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#fcfcfc',GradientType=0 );
+}
+
+div.kiji_bunrui {
+    font-size: 14px;
+    text-align: right;
+    clear: both;
+}
+
+div.entry-content {
+    margin: 0 20px 10px;
+    padding: 10px 0 0;
+}
+
+article {
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 1px #eee;
+    -webkit-box-shadow: 2px 2px 1px #eee;
+    -moz-box-shadow: 2px 2px 1px #eee;
+    padding: 0;
+    margin: 10px 0 30px; 
+}
+
+.site-content {
+    float: left;
+    width: 64%;
+    margin: 8px 0 0;
+    margin: 0.5714285rem 0 0;
+    letter-spacing: 0.05em;
+}
+
+.widget-area {
+    float:right;
+    width:34%;
+}
+
+#s {
+  width: 200px;
+  height: 20px;
+}
+
+#searchsubmit {
+  width: 60px;
+}

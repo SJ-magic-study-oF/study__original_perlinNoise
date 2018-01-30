@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- saved from url=(0133)http://cdn.api.b.hatena.ne.jp/entry/button/?url=http%3A%2F%2Fpostd.cc%2Funderstanding-perlin-noise%2F&layout=standard-balloon&lang=ja -->
+<html lang="ja" class="bbutton-html-wrapper"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="canonical" href="http://b.hatena.ne.jp/entry/postd.cc/understanding-perlin-noise/">
+  <title>はてなブックマークボタン</title>
+  <link rel="stylesheet" href="./reset.css" type="text/css" media="all">
+  <link rel="stylesheet" href="./entry-button.css" type="text/css" media="all">
+  <script>
+    function postMessageToParentWin(type, dataStr, useFallback) {
+      var match = window.name.match(/^(\w+)\|((https?:\/\/[^\/?#]+)[^#]*)/);
+      if (!match) return;
+      if (window.postMessage) {
+        window.parent.postMessage('HBMessage@{"type": "' + type + '", "data": ' + dataStr + '}', match[3]);
+        return;
+      }
+      if (useFallback) {
+        var url = match[2] + "#HBMessage-" + match[1] + "-" + type + "/" + dataStr;
+        try {
+          window.parent.location.replace(url);
+        } catch (ex) {
+          window.parent.location.href = url;
+        }
+      }
+    }
+    function clickHandler() {
+      postMessageToParentWin("click", "null", true);
+    }
+  </script>
+  </head><body>
+
+
+
+    
+      
+    
+    
+      
+      
+    
+      <div class="btn-standard lang-ja show-text show-count" onclick="if (event.button === 0) { clickHandler(); return false; }">
+        <a href="http://b.hatena.ne.jp/entry/postd.cc/understanding-perlin-noise/" target="_top" title="このエントリーをはてなブックマークに追加 (56 users)">
+          <span class="icon"></span>
+          <span class="hidden-text">ブックマーク</span>
+        </a><a href="http://b.hatena.ne.jp/entry/postd.cc/understanding-perlin-noise/" target="_blank" class="count" onclick="if (event.button === 0) { event.stopPropagation(); }">56</a>
+      </div>
+
+</body></html>
