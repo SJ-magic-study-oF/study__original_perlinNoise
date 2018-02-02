@@ -21,7 +21,10 @@
 
 /******************************
 ******************************/
-PERLIN_NOISE::PERLIN_NOISE() {
+PERLIN_NOISE::PERLIN_NOISE()
+: FadeType(FADE_TYPE__DEG_9)
+, Sharpen_Output(FADE_TYPE__DEG_1)
+{
 	// Initialize the permutation vector with the reference values
 	p = {
 		151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,
@@ -43,7 +46,10 @@ PERLIN_NOISE::PERLIN_NOISE() {
 
 /******************************
 ******************************/
-PERLIN_NOISE::PERLIN_NOISE(unsigned int seed) {
+PERLIN_NOISE::PERLIN_NOISE(unsigned int seed)
+: FadeType(FADE_TYPE__DEG_9)
+, Sharpen_Output(FADE_TYPE__DEG_1)
+{
 	p.resize(256);
 
 	// Fill p with values from 0 to 255
@@ -70,6 +76,26 @@ double PERLIN_NOISE::OctaveNoise(double x, double y, double z, int octaves, doub
 	
 	for(int i = 0; i < octaves; i++) {
 		total += noise(x * frequency, y * frequency, z * frequency) * amplitude;
+ 
+		maxValue += amplitude;
+ 
+		amplitude *= persistence;
+		frequency *= 2;
+	}
+ 
+	return total/maxValue;
+}
+
+/******************************
+******************************/
+double PERLIN_NOISE::OctaveNoise(double x, double y, int octaves, double persistence) {
+	double total = 0;
+	double frequency = 1;
+	double amplitude = 1;
+	double maxValue = 0;  // Used for normalizing result to 0.0 - 1.0
+	
+	for(int i = 0; i < octaves; i++) {
+		total += noise(x * frequency, y * frequency) * amplitude;
  
 		maxValue += amplitude;
  
@@ -114,9 +140,9 @@ double PERLIN_NOISE::noise(double x, double y, double z) {
 	z -= floor(z);
 
 	// Compute fade curves for each of x, y, z
-	double u = fade(x);
-	double v = fade(y);
-	double w = fade(z);
+	double u = fade(x, FadeType);
+	double v = fade(y, FadeType);
+	double w = fade(z, FadeType);
 
 	// Hash coordinates of the 8 cube corners
 	int A = p[X] + Y;		// <= 510(255 + 255), X <= 255
@@ -139,7 +165,9 @@ double PERLIN_NOISE::noise(double x, double y, double z) {
 						);
 	
 	
-	return (res + 1.0)/2.0; // For convenience we bind the result to 0 - 1 (theoretical min/max before is [-1, 1])
+	// return (res + 1.0)/2.0; // For convenience we bind the result to 0 - 1 (theoretical min/max before is [-1, 1])
+	res = (res + 1.0)/2.0;
+	return fade(res, Sharpen_Output);
 }
 
 /******************************
@@ -154,8 +182,8 @@ double PERLIN_NOISE::noise(double x, double y) {
 	y -= floor(y);
 
 	// Compute fade curves for each of x, y, z
-	double u = fade(x);
-	double v = fade(y);
+	double u = fade(x, FadeType);
+	double v = fade(y, FadeType);
 
 	// Hash coordinates of the 8 cube corners
 	int A = p[X] + Y;		// <= 510(255 + 255), X <= 255
@@ -171,7 +199,9 @@ double PERLIN_NOISE::noise(double x, double y) {
 						lerp(u, grad(p[AB], x, y-1), grad(p[BB], x-1, y-1))
 						);
 	
-	return (res + 1.0)/2.0; // For convenience we bind the result to 0 - 1 (theoretical min/max before is [-1, 1])
+	// return (res + 1.0)/2.0; // For convenience we bind the result to 0 - 1 (theoretical min/max before is [-1, 1])
+	res = (res + 1.0)/2.0;
+	return fade(res, Sharpen_Output);
 }
 
 /******************************
@@ -184,7 +214,7 @@ double PERLIN_NOISE::noise(double x) {
 	x -= floor(x);
 
 	// Compute fade curves for each of x, y, z
-	double u = fade(x);
+	double u = fade(x, FadeType);
 
 	// Hash coordinates of the 8 cube corners
 	int A = p[X];			// <= 255, X <= 255
@@ -195,20 +225,79 @@ double PERLIN_NOISE::noise(double x) {
 	// Add blended results from 8 corners of cube
 	double res = lerp(u, grad(p[AA], x), grad(p[BA], x-1));
 	
-	return (res + 1.0)/2.0; // For convenience we bind the result to 0 - 1 (theoretical min/max before is [-1, 1])
+	// return (res + 1.0)/2.0; // For convenience we bind the result to 0 - 1 (theoretical min/max before is [-1, 1])
+	res = (res + 1.0)/2.0;
+	return fade(res, Sharpen_Output);
 }
 
 /******************************
 ******************************/
-double PERLIN_NOISE::fade(double t) { 
-	return t * t * t * (t * (t * 6 - 15) + 10);
+double PERLIN_NOISE::test_fadeFunction(double t) { 
+	return fade(t, FadeType);
+}
+
+/******************************
+******************************/
+void PERLIN_NOISE::set_FadeType(FADE_TYPE _type)
+{
+	FadeType = _type;
+}
+
+/******************************
+******************************/
+PERLIN_NOISE::FADE_TYPE PERLIN_NOISE::get_FadeType()
+{
+	return FadeType;
+}
+
+/******************************
+******************************/
+void PERLIN_NOISE::set_SharpenType(FADE_TYPE _type)
+{
+	Sharpen_Output = _type;
+}
+
+/******************************
+******************************/
+PERLIN_NOISE::FADE_TYPE PERLIN_NOISE::get_SharpenType()
+{
+	return Sharpen_Output;
+}
+
+/******************************
+******************************/
+double PERLIN_NOISE::fade(double t, FADE_TYPE FadeType) { 
+	switch(FadeType){
+		case FADE_TYPE__DEG_9:
+			return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t * (t * (t * (70 * t + 35) + 15) + 5) + 1) + 1;
+			// return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (70*t*t*t*t + 35*t*t*t + 15*t*t + 5*t + 1) + 1;
+			
+		case FADE_TYPE__DEG_7:
+			// return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (-20*t*t*t -10*t*t -4*t -1) + 1;
+			return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t * (t * (-20 * t - 10) - 4) - 1) + 1;
+			
+		case FADE_TYPE__DEG_5:
+			return t * t * t * (t * (t * 6 - 15) + 10);
+			
+		case FADE_TYPE__DEG_3:
+			return t * t * (-2 * t + 3);
+			
+		case FADE_TYPE__DEG_1:
+			return t;
+			
+		case FADE_TYPE__DEG_COS:
+			return -0.5 * cos(2 * PI / 2 * t) + 0.5;
+			
+		default:
+			return t * t * t * (t * (t * 6 - 15) + 10);
+	}
 }
 
 /******************************
 ******************************/
 double PERLIN_NOISE::lerp(double t, double a, double b) { 
-	// return a + t * (b - a); 
-	return (1 - t) * a + t * b;
+	return a + t * (b - a); 
+	// return (1 - t) * a + t * b;
 }
 
 /******************************

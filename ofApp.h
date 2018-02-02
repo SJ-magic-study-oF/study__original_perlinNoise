@@ -35,6 +35,28 @@
 ■hash table
 	http://wa3.i-3-i.info/word11947.html
 ************************************************************/
+
+/************************************************************
+考察・検討
+
+■double OctaveNoise(double x, int octaves, double persistence); octaves = 2. の処理時間
+How to check.
+	test_noise_1Dimensional()で、fprintfをコメントアウトしてtest.
+	
+Result
+	≒ zero
+	fprintf()を入れても、1usであった.
+	
+■1次元noise
+Conclusion
+	octaves = 2.としてOctaveNoise()を使用することで、十分複雑な結果が得られた(cf: sj_test.xlsx).
+	
+■2次元模様(2次元 for still image, 3次元 for animation)の処理時間
+Conclusion
+	sj_test.xlsx - FrameRate比較 より
+	ofNoise()と比較して、より高速に処理が完了していることがわかる。
+************************************************************/
+
 #pragma once
 
 /************************************************************
@@ -58,6 +80,11 @@ private:
 		BUF_SIZE = 512,
 	};
 	
+	enum STATE_KEYINPUT{
+		STATE_KEYINPUT__FADE,
+		STATE_KEYINPUT__SHARP,
+	};
+	
 	/****************************************
 	****************************************/
 	ofImage image;
@@ -65,9 +92,12 @@ private:
 	
 	PERLIN_NOISE PerlinNoise;
 	
+	STATE_KEYINPUT State_KeyInput;
+	
 	bool b_OriginalMethod;
 	bool b_Octave;
 	bool b_WoodenStructure;
+	bool b_animation;
 	
 	int octaves;
 	
@@ -77,6 +107,7 @@ private:
 	****************************************/
 	void makeImageData();
 	void test_noise_1Dimensional();
+	void test_noise_FadeCurve();
 	
 public:
 	/****************************************
